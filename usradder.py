@@ -82,34 +82,36 @@ n = 0
 added_users = []
 for user in users:
     n += 1
-    if n % 80 == 0:
-        time.sleep(60)
+    added_users.append(user)
+    if n % 50 == 0:
+        print(f'{sleep}{g} Sleep 2 min to prevent possible account ban{rs}')
+        time.sleep(120)
     try:
-        print("Adding {}".format(user['id']))
-        if mode == 1:
-            if user['username'] == "":
-                continue
-            user_to_add = client.get_input_entity(user['username'])
-        elif mode == 2:
-            user_to_add = InputPeerUser(user['id'], user['access_hash'])
-        else:
-            sys.exit("Invalid Mode Selected. Please Try Again.")
-        client(InviteToChannelRequest(target_group_entity, [user_to_add]))
-        print("Waiting for 60-180 Seconds ...")
-        time.sleep(random.randrange(0, 5))
+        if user['username'] == "":
+            continue
+        user_to_add = client.get_input_entity(user['username'])
+        client(InviteToChannelRequest(entity, [user_to_add]))
+        usr_id = user['user_id']
+        print(f'{attempt}{g} Adding {usr_id}{rs}')
+        print(f'{sleep}{g} Sleep 20s{rs}')
+        time.sleep(20)
     except PeerFloodError:
-        print("Getting Flood Error from telegram. Script is stopping now. Please try again after some time.")
-        print("Waiting {} seconds".format(SLEEP_TIME_2))
-        time.sleep(SLEEP_TIME_2)
+        #time.sleep()
+        os.system(f'del {file}')
+        sys.exit(f'\n{error}{r} Aborted. Peer Flood Error{rs}')
     except UserPrivacyRestrictedError:
-        print("The user's privacy settings do not allow you to do this. Skipping ...")
-        print("Waiting for 5 Seconds ...")
-        time.sleep(random.randrange(0, 5))
-    except:
-        traceback.print_exc()
-        print("Unexpected Error! ")
+        print(f'{error}{r} User Privacy Error[non-serious]{rs}')
         continue
-
+    except KeyboardInterrupt:
+        print(f'{error}{r} Aborted. Keyboard Interrupt{rs}')
+        update_list(users, added_users)
+        if not len(users) == 0:
+            print(f'{info}{g} Remaining users logged to {file}')
+            logger = Relog(users, file)
+            logger.start()
+    except:
+        print(f'{error}{r} Some Other error in adding{rs}')
+        continue
 os.system(f'del {file}')
 input(f'{info}{g}Adding complete...Press enter to exit...')
 sys.exit()
