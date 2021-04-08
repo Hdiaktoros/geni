@@ -84,7 +84,7 @@ for user in users:
     added_users.append(user)
     if n % 50 == 0:
         print(f'{sleep}{g} Sleep 2 min to prevent possible account ban{rs}')
-        time.sleep(120)
+        time.sleep(500)
     try:
         if user['username'] == "":
             continue
