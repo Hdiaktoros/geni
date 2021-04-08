@@ -7,7 +7,6 @@ import csv
 import time
 import random
 import pyfiglet
-import traceback
 #import traceback
 from colorama import init, Fore
 import os
